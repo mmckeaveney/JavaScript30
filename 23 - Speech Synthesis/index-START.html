@@ -22,19 +22,56 @@
       <label for="pitch">Pitch:</label>
 
       <input name="pitch" type="range" min="0" max="2" step="0.1">
-      <textarea name="text">Hello! I love JavaScript 👍</textarea>
+      <textarea name="text">Harry smells like a bag of 💩</textarea>
       <button id="stop">Stop!</button>
       <button id="speak">Speak</button>
 
     </div>
 
 <script>
-  const msg = new SpeechSynthesisUtterance();
+  const speech = new SpeechSynthesisUtterance(); // Information about the speech - voice, speed, pitch etc
   let voices = [];
   const voicesDropdown = document.querySelector('[name="voice"]');
   const options = document.querySelectorAll('[type="range"], [name="text"]');
   const speakButton = document.querySelector('#speak');
   const stopButton = document.querySelector('#stop');
+  speech.text = document.querySelector('[name="text"]').value;
+
+  function populateVoices() {
+    voices = this.getVoices(); // Returns a list of voices for the OS.
+    const voiceOptions = 
+      voices.map((voice) => 
+        `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`).join('');
+
+      voicesDropdown.innerHTML = voiceOptions; // Set the options tag to the list
+  }
+
+  // Sets the voice to use
+  function setVoice(utterance) {
+    speech.voice = voices.find(voice => voice.name === this.value); // Find the voice in the list that matches the one in the dropdown
+    toggle();
+  }
+
+  // Stops and starts the voice
+  function toggle(startOver = true) {
+    speechSynthesis.cancel();
+    if (startOver) speechSynthesis.speak(speech); 
+  }
+
+  function setOption() {
+    speech[this.name] = this.value; // Sets the message property to what changed.
+    toggle();
+  }
+
+  // Event listeners
+  speechSynthesis.addEventListener('voiceschanged', populateVoices); 
+  voicesDropdown.addEventListener('change', setVoice);
+  options.forEach((option) => {
+    option.addEventListener('change', setOption);
+  });
+  speakButton.addEventListener('click', toggle);
+  stopButton.addEventListener('click', () => toggle(false));
+
 </script>
 
 </body>

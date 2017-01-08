@@ -39,7 +39,17 @@
 
 <button></button>
 <script>
+const divs = document.querySelectorAll('div');
 
+function logText(e) {
+  e.stopPropagation(); // Stops bubbling up, not triggering events on parents
+  console.log(this.classList.value);
+}
+
+divs.forEach((div) => div.addEventListener('click', logText, {
+  capture: false, // Means the event will be run on the capture down, and not the bubble up
+  once: true // Listens for one click to be fired, then unbinds the event listener
+}));
 </script>
 </body>
 </html>

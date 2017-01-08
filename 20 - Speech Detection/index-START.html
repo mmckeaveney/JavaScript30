@@ -10,8 +10,39 @@
   </div>
 
 <script>
+  // Gets the speech recognition
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
+  const recognition = new SpeechRecognition();
+  recognition.interimResults = true;
+
+  let p = document.createElement('p');
+  const words = document.querySelector('.words');
+  words.appendChild(p);
+
+  const getWordsSpoken = (speechEvent) => 
+     Array.from(speechEvent.results)
+      .map((result) => result[0])
+      .map((result) => result.transcript)
+      .join('');
+  
+  // Add the event listener when a speech result comes back
+  recognition.addEventListener('result', (e) => {
+    // Get the words spoken and assign them to a p tag
+    const transcript = getWordsSpoken(e); 
+    p.textContent = transcript;
+
+    // When the sentence is finished, create a new p element 
+    if (e.results[0].isFinal) {
+      console.log('done');
+      p = document.createElement('p');
+      words.appendChild(p);
+    }
+    console.log(transcript);
+  });
+
+  recognition.addEventListener('end', recognition.start);
+  recognition.start();
 
 </script>
 

@@ -15,6 +15,21 @@
   </div>
 
 <script>
+  const speed = document.querySelector('.speed');
+  const bar = speed.querySelector('.speed-bar');
+  const video = document.querySelector('.flex')
+
+  speed.addEventListener('mousemove', function(e) {
+    const y = e.pageY - this.offsetTop; // get the current y value on the slider
+    const percent = y / this.offsetHeight; // get the percentage of it according to the height of the slider
+    const min = 0.4;
+    const max = 4;
+    const height = Math.round(percent * 100) + '%'; 
+    const playbackRate = percent * (max - min) + min;  
+    bar.style.height = height; // Set the height of the bar
+    bar.textContent = playbackRate.toFixed(2) + 'x'; // toFixed fixes to the amount of decimal places passed in
+    video.playbackRate = playbackRate;
+  });
 </script>
 </body>
 </html>

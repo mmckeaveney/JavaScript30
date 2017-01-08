@@ -44,6 +44,24 @@
 
 <script>
 const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+const bandsList = document.querySelector('#bands');
+
+// sort the array without 'the, and, or, a'
+// put them into the HTML with the full titles
+const strip = (regex) => (str) => str.replace(regex, '').trim(); 
+const sorted = bands.sort((a, b) => {
+
+  const stripped = strip(new RegExp('The|and|or|A', 'g'));
+  return stripped(a) > stripped(b) ? 1 : -1; 
+});
+
+console.log(sorted);
+
+bandsList.innerHTML = sorted.map((band) => {
+  return `
+  <li> ${band} </li>
+  `
+}).join('');
 
 
 </script>

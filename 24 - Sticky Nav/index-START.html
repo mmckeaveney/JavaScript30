@@ -54,7 +54,22 @@
   </div>
 
 <script>
+const nav = document.querySelector('#main');
+const topOfNav = nav.offsetTop;
 
+function fixNav() {
+  if (window.scrollY >= topOfNav) {
+    // nav.offsetHeight is the height of the nav. We need to pad the body to stop it from jerking
+    // Whenever the nav is set to fixed, which causes the browser to think some space has freed up and moves into it
+    document.body.style.paddingTop = nav.offsetHeight + 'px';    
+    document.body.classList.add('fixed-nav')
+  } else {
+    document.body.style.paddingTop = 0; 
+    document.body.classList.remove('fixed-nav')
+  }
+}
+
+window.addEventListener('scroll', fixNav);
 </script>
 
 </body>

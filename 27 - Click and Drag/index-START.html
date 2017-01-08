@@ -35,6 +35,36 @@
   </div>
 
 <script>
+
+const slider = document.querySelector('.items');
+let isDown = false;
+let startX;
+let scrollLeft;
+
+slider.addEventListener('mousedown', (e) => {
+  isDown = true;
+  slider.classList.add('active');
+  startX = e.pageX - slider.offsetLeft; // handles offset if there is a margin etc on the page.
+  scrollLeft = slider.scrollLeft;
+});
+
+slider.addEventListener('mouseleave', (e) => {
+  isDown = false;
+  slider.classList.remove('active');
+});
+
+slider.addEventListener('mouseup', () => {
+  isDown = false;
+  slider.classList.remove('active');
+});
+
+slider.addEventListener('mousemove', (e) => {
+  if (!isDown) return; // stop from running when the mouse is not clicked.
+  e.preventDefault(); // Stops highlighting text etc
+  const x = e.pageX - slider.offsetLeft; // x value while mouse is held down
+  const walk = x - startX; // how far you have deviated from the starting position
+  slider.scrollLeft = scrollLeft - walk; // set the scroll to the starting position with the walk 
+});
 </script>
 
   </body>

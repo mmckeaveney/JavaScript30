@@ -28,7 +28,46 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || [];
+
+  function addItem(e) {
+    e.preventDefault(); // Prevent page reload
+    const text = this.querySelector('[name=item]').value; // value is the current value of an input
+    const item = {
+      text,
+      checked: false
+    }
+    items.push(item);
+    populateList(items, itemsList);
+    localStorage.setItem('items', JSON.stringify(items));
+    this.reset(); // form elements have a reset method which clear it out
+  }
+
+  function populateList(plates = [], platesList) {
+    platesList.innerHTML = plates.map((plate, index) => 
+    `
+      <li>
+        <input type="checkbox" data-index=${index} id="item${index}" ${plate.done ? 'checked' : ''} /> 
+        <label for="item${index}">${plate.text}</label>
+      </li>
+    `).join('');
+  }
+
+  // Event delegation - listen on a higher element and filter it out if it doesn't match the children
+  function toggleDone(e) {
+    if (!e.target.matches('input')) return;
+    const el = e.target;
+    const i = el.dataset.index;
+    items[i].done = !items[i].done;
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+
+  addItems.addEventListener('submit', addItem);
+  itemsList.addEventListener('click', toggleDone);
+
+  // Populate the list on startup from LocalStorage
+  populateList(items, itemsList);
 
 </script>
 

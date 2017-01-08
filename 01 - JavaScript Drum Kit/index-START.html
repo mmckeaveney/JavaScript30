@@ -58,6 +58,24 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  const removeTransition = (event) => {
+    if (event.propertyName !== 'transform') return;  // If the event is not a tranform event, just return.
+    event.target.classList.remove('playing'); // Remove the playing class from the key when the transition is finished.
+  }; 
+
+  const playSound = (event) => {
+    const audio = document.querySelector(`audio[data-key='${event.keyCode}']`); // Select the audio element based on the keyCode
+    const key = document.querySelector(`.key[data-key='${event.keyCode}']`); // Select the key div based on event keyCode
+    if (!audio) return; // If the element doesn't exist just return.
+
+    audio.currentTime = 0; // Sets the currentTime to 0 so you can play them repeatedly 
+    audio.play(); // Play the sound
+    key.classList.add('playing'); // Add the playing CSS class to get the visual effect
+  };
+
+const keys = document.querySelectorAll('.key');
+keys.forEach((key) => key.addEventListener('transitionend', removeTransition)); // Remove the transition when transition end fires.
+window.addEventListener('keydown', playSound);
 
 </script>
 
